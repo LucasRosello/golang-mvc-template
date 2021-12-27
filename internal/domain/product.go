@@ -1,6 +1,6 @@
 package domain
 
-type Example struct {
+type Product struct {
 	ID          string
 	ExampleText string
 }
