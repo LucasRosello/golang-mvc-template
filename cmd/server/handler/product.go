@@ -5,57 +5,57 @@ import (
 	"strconv"
 
 	"github.com/LucasRosello/golang-mvc-template/internal/domain"
-	"github.com/LucasRosello/golang-mvc-template/internal/example"
+	"github.com/LucasRosello/golang-mvc-template/internal/product"
 	"github.com/gin-gonic/gin"
 )
 
-type Example struct {
-	exampleService example.Service
+type Product struct {
+	productService product.Service
 }
 
-func NewExample(e example.Service) *Example {
-	return &Example{
-		exampleService: e,
+func NewProduct(e product.Service) *Product {
+	return &Product{
+		productService: e,
 	}
 }
 
-func (e *Example) Get() gin.HandlerFunc {
+func (e *Product) Get() gin.HandlerFunc {
 	type response struct {
-		Data domain.Example `json:"data"`
+		Data domain.Product `json:"data"`
 	}
 
 	return func(c *gin.Context) {
 
 		ctx := context.Background()
-		sel, err := e.exampleService.Get(ctx, int(0))
+		sel, err := e.productService.Get(ctx, int(0))
 		if err != nil {
-			//c.JSON(404, web.NewError(404, "example not found"))
-			c.JSON(404, "Ejemplo no encontrado (o no se implemento el metodo, revisar codigo)")
+			//c.JSON(404, web.NewError(404, "product not found"))
+			c.JSON(404, "Producto no encontrado (o no se implemento el metodo, revisar codigo)")
 			return
 		}
 		c.JSON(201, &response{sel})
 	}
 }
 
-func (e *Example) GetAll() gin.HandlerFunc {
+func (e *Product) GetAll() gin.HandlerFunc {
 	type response struct {
-		Data []domain.Example `json:"data"`
+		Data []domain.Product `json:"data"`
 	}
 
 	return func(c *gin.Context) {
 
 		ctx := context.Background()
-		examples, err := e.exampleService.GetAll(ctx)
+		products, err := e.productService.GetAll(ctx)
 		if err != nil {
 			c.JSON(404, err.Error())
 			return
 		}
 
-		c.JSON(201, &response{examples})
+		c.JSON(201, &response{products})
 	}
 }
 
-func (e *Example) Store() gin.HandlerFunc {
+func (e *Product) Store() gin.HandlerFunc {
 	type request struct {
 		ExampleText string `json:"example-text"`
 	}
@@ -74,13 +74,13 @@ func (e *Example) Store() gin.HandlerFunc {
 		}
 
 		ctx := context.Background()
-		example, _ := e.exampleService.Store(ctx, req.ExampleText)
+		product, _ := e.productService.Store(ctx, req.ExampleText)
 
-		c.JSON(201, &response{example})
+		c.JSON(201, &response{product})
 	}
 }
 
-func (e *Example) Update() gin.HandlerFunc {
+func (e *Product) Update() gin.HandlerFunc {
 	type request struct {
 		ExampleText string `json:"example-text"`
 	}
@@ -100,17 +100,17 @@ func (e *Example) Update() gin.HandlerFunc {
 		}
 
 		ctx := context.Background()
-		example, err := e.exampleService.Update(ctx, req.ExampleText)
+		product, err := e.productService.Update(ctx, req.ExampleText)
 		if err != nil {
 			c.JSON(500, err.Error())
 			return
 		}
 
-		c.JSON(200, &response{example})
+		c.JSON(200, &response{product})
 	}
 }
 
-func (e *Example) Delete() gin.HandlerFunc {
+func (e *Product) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -119,12 +119,12 @@ func (e *Example) Delete() gin.HandlerFunc {
 		}
 
 		ctx := context.Background()
-		err = e.exampleService.Delete(ctx, int(id))
+		err = e.productService.Delete(ctx, int(id))
 		if err != nil {
 			c.JSON(400, err.Error())
 			return
 		}
 
-		c.JSON(200, "The example has been deleted")
+		c.JSON(200, "El producto fue eliminado")
 	}
 }

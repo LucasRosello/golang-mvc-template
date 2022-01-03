@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/LucasRosello/golang-mvc-template/cmd/server/handler"
-	"github.com/LucasRosello/golang-mvc-template/internal/example"
+	"github.com/LucasRosello/golang-mvc-template/internal/product"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,16 +13,16 @@ func main() {
 	var db *sql.DB //DB VACIA
 	router := gin.Default()
 
-	exampleRepository := example.NewRepository(db)
-	exampleService := example.NewService(exampleRepository)
-	exampleHandler := handler.NewExample(exampleService)
-	examplesRoutes := router.Group("/api/v1/examples")
+	productRepository := product.NewRepository(db)
+	productService := product.NewService(productRepository)
+	productHandler := handler.NewProduct(productService)
+	productRoutes := router.Group("/api/v1/productos")
 	{
-		examplesRoutes.GET("/", exampleHandler.GetAll())
-		examplesRoutes.GET("/:id", exampleHandler.Get())
-		examplesRoutes.POST("/", exampleHandler.Store())
-		examplesRoutes.PATCH("/:id", exampleHandler.Update())
-		examplesRoutes.DELETE("/:id", exampleHandler.Delete())
+		productRoutes.GET("/", productHandler.GetAll())
+		productRoutes.GET("/:id", productHandler.Get())
+		productRoutes.POST("/", productHandler.Store())
+		productRoutes.PATCH("/:id", productHandler.Update())
+		productRoutes.DELETE("/:id", productHandler.Delete())
 	}
 
 	router.Run()
